@@ -11,10 +11,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -28,9 +27,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import models.Movie
 import com.example.movieappmad24.ui.theme.MovieAppMAD24Theme
+import models.getMovies
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,21 +42,20 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MovieRow()
+                    MovieList()
                 }
             }
         }
     }
 
-    @Preview(showBackground = true)
     @Composable
-    fun MovieRow() {
+    fun MovieRow(movie: Movie) {
         Column(
         ){
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(5.dp)
+                    .padding(all = 5.dp)
             ){
                 Box(
                 ) {
@@ -65,7 +64,7 @@ class MainActivity : ComponentActivity() {
                         contentDescription = "placeholder_image",
                         contentScale = ContentScale.FillWidth,
                         modifier = Modifier
-                            .aspectRatio(21f / 9f)
+                            .aspectRatio(ratio = 21f / 9f)
                     )
                     Icon(
                         imageVector = Icons.Default.FavoriteBorder,
@@ -81,12 +80,24 @@ class MainActivity : ComponentActivity() {
                         .fillMaxWidth()
                         .padding(all = 10.dp)
                 ){
-                    Text(text = "Avatar")
+                    Text(text = movie.title)
                     Icon(
                         imageVector = Icons.Default.KeyboardArrowUp,
                         contentDescription = "Additional information"
                     )
                 }
+            }
+        }
+    }
+
+    @Composable
+    fun MovieList(
+        movies: List<Movie> = getMovies()
+    ) {
+        LazyColumn {
+            // Add a single item
+            items(movies) {
+                movie -> MovieRow(movie = movie)
             }
         }
     }
