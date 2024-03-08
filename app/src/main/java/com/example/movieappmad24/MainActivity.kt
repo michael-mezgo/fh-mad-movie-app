@@ -55,6 +55,7 @@ import androidx.compose.ui.layout.ModifierInfo
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.example.movieappmad24.models.Movie
 import com.example.movieappmad24.models.getMovies
 import com.example.movieappmad24.ui.theme.MovieAppMAD24Theme
@@ -143,10 +144,12 @@ fun MovieRow(movie: Movie) {
                     .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.movie_image),
+                // https://coil-kt.github.io/coil/compose/
+                AsyncImage(
+                    model = movie.images[0],
                     contentScale = ContentScale.Crop,
-                    contentDescription = "placeholder image"
+                    placeholder = painterResource(id = R.drawable.movie_image),
+                    contentDescription = "${movie.title} Image"
                 )
                 Box(
                     modifier = Modifier
