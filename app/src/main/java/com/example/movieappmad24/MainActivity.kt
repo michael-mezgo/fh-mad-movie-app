@@ -3,6 +3,7 @@ package com.example.movieappmad24
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +30,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CardElevation
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -178,6 +180,34 @@ fun MovieRow(movie: Movie) {
                     else Icons.Default.KeyboardArrowUp, contentDescription = "show more"
                 )
             }
+
+            AnimatedVisibility(visible = showDetails) {
+                ShowMovieDetails(movie = movie)
+            }
+        }
+    }
+}
+
+@Composable
+fun ShowMovieDetails(movie: Movie) {
+    Column(modifier = Modifier
+        .padding(all = 15.dp)) {
+        Row {
+            Text("""Director: ${movie.director}
+                |Released: ${movie.year}
+                |Genre: ${movie.genre}
+                |Actors: ${movie.actors}
+                |Rating: ${movie.rating}
+            """.trimMargin())
+        }
+        Row(
+            modifier = Modifier
+                .padding(vertical = 5.dp)
+        ) {
+            Divider()
+        }
+        Row {
+            Text("Plot: ${movie.plot}")
         }
     }
 }
