@@ -91,7 +91,10 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun CreateNavigationBar(items: List<NavItem>) {
-    var selectedItem by remember {
+    if(items.isEmpty())
+        return
+
+    var selectedItem by remember { // purposely val (Line 106 will be uncommented when navigation is used)
         mutableStateOf(items[0])
     }
 
@@ -153,7 +156,7 @@ fun MovieCardPictureAndFavorite(movie: Movie) {
     ) {
         // https://coil-kt.github.io/coil/compose/
         AsyncImage(
-            model = movie.images[0],
+            model = if(movie.images.isNotEmpty()) movie.images[0] else null,
             contentScale = ContentScale.Crop,
             placeholder = painterResource(id = R.drawable.movie_image),
             contentDescription = "${movie.title} Image"
