@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -43,13 +42,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.movieappmad24.models.Movie
@@ -75,7 +71,10 @@ class MainActivity : ComponentActivity() {
                         },
                         bottomBar = {
                             val navigationItems: List<NavItem> = mutableListOf(
-                                NavItem(name = "Home", icon = Icons.Default.Home, clicked = {}), //TODO: Navigation Logic in Clicked
+                                NavItem(
+                                    name = "Home",
+                                    icon = Icons.Default.Home,
+                                    clicked = {}), //TODO: Navigation Logic in Clicked
                                 NavItem(name = "Watchlist", icon = Icons.Default.Star, clicked = {})
                             )
                             CreateNavigationBar(items = navigationItems)
@@ -91,24 +90,24 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun CreateNavigationBar(items: List<NavItem>)
-{    var selectedItem by remember {
-    mutableStateOf(items[0])
-}
+fun CreateNavigationBar(items: List<NavItem>) {
+    var selectedItem by remember {
+        mutableStateOf(items[0])
+    }
 
     NavigationBar {
-        items.forEach{item ->
+        items.forEach { item ->
             NavigationBarItem(
-                selected = if(selectedItem.name == item.name) true else false,
+                selected = selectedItem.name == item.name,
                 onClick = {
                     //selectedItem = item //changes selected item when clicked
                     item.clicked // Navigation Logic
-                          },
+                },
                 icon = {
-                       Icon(
-                           imageVector = item.icon,
-                           contentDescription = item.name
-                       )
+                    Icon(
+                        imageVector = item.icon,
+                        contentDescription = item.name
+                    )
                 },
                 label = { Text(item.name) })
         }
@@ -138,15 +137,14 @@ fun MovieRow(movie: Movie) {
     ) {
         Column {
             MovieCardPictureAndFavorite(movie = movie)
-            
+
             MovieCardTitleAndDetails(movie = movie)
         }
     }
 }
 
 @Composable
-fun MovieCardPictureAndFavorite(movie: Movie)
-{
+fun MovieCardPictureAndFavorite(movie: Movie) {
     Box(
         modifier = Modifier
             .height(150.dp)
@@ -176,7 +174,7 @@ fun MovieCardPictureAndFavorite(movie: Movie)
 }
 
 @Composable
-fun MovieCardTitleAndDetails(movie: Movie){
+fun MovieCardTitleAndDetails(movie: Movie) {
     var showDetails by remember {
         mutableStateOf(false)
     }
@@ -207,15 +205,19 @@ fun MovieCardTitleAndDetails(movie: Movie){
 
 @Composable
 fun MovieDetails(movie: Movie) {
-    Column(modifier = Modifier
-        .padding(all = 15.dp)) {
+    Column(
+        modifier = Modifier
+            .padding(all = 15.dp)
+    ) {
         Row {
-            Text("""Director: ${movie.director}
+            Text(
+                """Director: ${movie.director}
                 |Released: ${movie.year}
                 |Genre: ${movie.genre}
                 |Actors: ${movie.actors}
                 |Rating: ${movie.rating}
-            """.trimMargin())
+            """.trimMargin()
+            )
         }
         Row(
             modifier = Modifier
