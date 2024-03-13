@@ -1,7 +1,6 @@
 package com.example.movieappmad24.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.currentComposer
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController

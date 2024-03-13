@@ -23,8 +23,8 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -213,7 +213,7 @@ fun MovieDetails(movie: Movie) {
             modifier = Modifier
                 .padding(vertical = 5.dp)
         ) {
-            Divider()
+            HorizontalDivider()
         }
         Row {
             Text("Plot: ${movie.plot}")
