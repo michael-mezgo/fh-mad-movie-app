@@ -44,6 +44,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.movieappmad24.R
 import com.example.movieappmad24.models.Movie
@@ -53,7 +55,7 @@ import com.example.movieappmad24.ui.theme.NavItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavController) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -70,7 +72,7 @@ fun HomeScreen() {
             CreateNavigationBar(items = navigationItems)
         },
         content = { padding ->
-            (MovieList(movies = getMovies(), padding))
+            (MovieList(movies = getMovies(), padding, navController))
         }
     )
 }
@@ -104,12 +106,12 @@ fun CreateNavigationBar(items: List<NavItem>) {
 }
 
 @Composable
-fun MovieList(movies: List<Movie> = getMovies(), padding: PaddingValues) {
+fun MovieList(movies: List<Movie> = getMovies(), padding: PaddingValues, navController: NavController) {
     LazyColumn(
         modifier = Modifier.padding(padding)
     ) {
         items(movies) { movie ->
-            MovieRow(movie) {movieId -> Log.d("MovieList", "My callback value:$movieId")}
+            MovieRow(movie) {movieId -> navController.navigate("detailscreen/$movieId")}
         }
     }
 }
@@ -225,6 +227,6 @@ fun MovieDetails(movie: Movie) {
 @Composable
 fun DefaultPreview() {
     MovieAppMAD24Theme {
-        MovieList(movies = getMovies(), padding = PaddingValues(10.dp))
+        MovieList(movies = getMovies(), padding = PaddingValues(10.dp), rememberNavController())
     }
 }
