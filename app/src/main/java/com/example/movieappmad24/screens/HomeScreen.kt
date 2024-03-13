@@ -1,5 +1,6 @@
 package com.example.movieappmad24.screens
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -108,18 +109,19 @@ fun MovieList(movies: List<Movie> = getMovies(), padding: PaddingValues) {
         modifier = Modifier.padding(padding)
     ) {
         items(movies) { movie ->
-            MovieRow(movie)
+            MovieRow(movie) {movieId -> Log.d("MovieList", "My callback value:$movieId")}
         }
     }
 }
 
 
 @Composable
-fun MovieRow(movie: Movie) {
+fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {}) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(5.dp),
+            .padding(5.dp)
+            .clickable { onItemClick(movie.id) },
         shape = ShapeDefaults.Large,
         elevation = CardDefaults.cardElevation(10.dp)
     ) {
