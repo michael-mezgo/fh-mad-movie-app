@@ -9,7 +9,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.movieappmad24.navigation.Screen
@@ -45,7 +44,7 @@ fun CreateNavigationBar(items: List<NavItem>, navController: NavController) {
                 // https://stackoverflow.com/a/67603294/21992499
                 selected = item.route == navBackStackEntry?.destination?.route,
                 onClick = {
-                    if(item.route != navBackStackEntry?.destination?.route)
+                    if (item.route != navBackStackEntry?.destination?.route)
                         navController.navigate(item.route)
                 },
                 icon = {
