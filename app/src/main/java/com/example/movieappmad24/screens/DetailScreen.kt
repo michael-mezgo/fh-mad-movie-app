@@ -25,6 +25,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.movieappmad24.R
 import com.example.movieappmad24.models.getMovies
+import com.example.movieappmad24.widgets.CustomTopAppBar
 import com.example.movieappmad24.widgets.MovieCard
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,9 +36,9 @@ fun DetailScreen(movieId: String, navController: NavController) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            CenterAlignedTopAppBar(title = {
-                Text(movie.title)
-            })
+            CustomTopAppBar(title = movie.title) {
+                navController.popBackStack()
+            }
         },
 
         content = { paddingValues ->
