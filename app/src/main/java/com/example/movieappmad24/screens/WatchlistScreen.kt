@@ -16,21 +16,16 @@ import com.example.movieappmad24.models.getMovies
 import com.example.movieappmad24.navigation.Screen
 import com.example.movieappmad24.ui.theme.NavItem
 import com.example.movieappmad24.widgets.BottomNavigationBar
+import com.example.movieappmad24.widgets.SimpleTopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WatchlistScreen(navController: NavController) {
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            CenterAlignedTopAppBar(title = { Text("Movie App") })
-        },
-        bottomBar = {
-                    BottomNavigationBar(navController = navController)
-        },
-        content = { padding ->
-            Text(text = "Watchlist", modifier = Modifier
-                .padding(padding))
-        }
-    )
+    Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
+        SimpleTopAppBar(title = "Watchlist")
+    }, bottomBar = {
+        BottomNavigationBar(navController = navController)
+    }, content = { padding ->
+        (MovieList(movies = getMovies().subList(1,3), padding, navController))
+    })
 }

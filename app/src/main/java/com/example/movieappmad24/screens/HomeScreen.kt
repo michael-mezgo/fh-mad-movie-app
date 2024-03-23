@@ -21,29 +21,22 @@ import com.example.movieappmad24.navigation.Screen
 import com.example.movieappmad24.ui.theme.MovieAppMAD24Theme
 import com.example.movieappmad24.widgets.BottomNavigationBar
 import com.example.movieappmad24.widgets.MovieCard
+import com.example.movieappmad24.widgets.SimpleTopAppBar
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController) {
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            CenterAlignedTopAppBar(title = { Text("Movie App") })
-        },
-        bottomBar = {
-                    BottomNavigationBar(navController = navController)
-        },
-        content = { padding ->
-            (MovieList(movies = getMovies(), padding, navController))
-        }
-    )
+    Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
+        SimpleTopAppBar(title = "Movie App")
+    }, bottomBar = {
+        BottomNavigationBar(navController = navController)
+    }, content = { padding ->
+        (MovieList(movies = getMovies(), padding, navController))
+    })
 }
 
 @Composable
 fun MovieList(
-    movies: List<Movie> = getMovies(),
-    padding: PaddingValues,
-    navController: NavController
+    movies: List<Movie> = getMovies(), padding: PaddingValues, navController: NavController
 ) {
     LazyColumn(
         modifier = Modifier.padding(padding)
@@ -51,7 +44,8 @@ fun MovieList(
         items(movies) { movie ->
             MovieCard(movie) { movieId ->
                 val route = Screen.Detail.setMovieId(movieId)
-                navController.navigate(route = route) }
+                navController.navigate(route = route)
+            }
         }
     }
 }

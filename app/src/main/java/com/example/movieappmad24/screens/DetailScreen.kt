@@ -41,9 +41,7 @@ fun DetailScreen(movieId: String?, navController: NavController) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            CustomTopAppBar(title = movie.title) {
-                navController.popBackStack()
-            }
+            CustomTopAppBar(title = movie.title, navController = navController)
         },
 
         content = { paddingValues ->
