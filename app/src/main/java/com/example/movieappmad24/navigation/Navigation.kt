@@ -8,23 +8,26 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.movieappmad24.screens.DetailScreen
 import com.example.movieappmad24.screens.HomeScreen
+import com.example.movieappmad24.screens.WatchlistScreen
 
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
 
     NavHost(navController = navController,
-        startDestination = "homescreen") {
+        startDestination = Screen.Home.route) {
 
-        composable(route = "homescreen") {
+        composable(route = Screen.Home.route) {
             HomeScreen(navController)
         }
 
-        composable(route = "detailscreen/{movieId}",
-            arguments = listOf(navArgument(name = "movieId") {type = NavType.StringType})
-        ) {backStackEntry ->
-            backStackEntry.arguments?.getString("movieId")
-                ?.let { DetailScreen(movieId = it, navController = navController) }
+        composable(route = Screen.Detail.route)
+        {backStackEntry ->
+            DetailScreen(movieId = backStackEntry.arguments?.getString(MOVIE_ID), navController = navController)
+        }
+
+        composable(route = Screen.Watchlist.route) {
+            WatchlistScreen(navController)
         }
     }
 }

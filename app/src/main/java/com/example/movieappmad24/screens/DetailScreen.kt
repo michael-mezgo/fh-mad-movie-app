@@ -28,10 +28,15 @@ import com.example.movieappmad24.models.getMovies
 import com.example.movieappmad24.widgets.CustomTopAppBar
 import com.example.movieappmad24.widgets.MovieCard
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailScreen(movieId: String, navController: NavController) {
-    val movie = getMovies().find { it.id == movieId } ?: return // if movie is NULL return
+fun DetailScreen(movieId: String?, navController: NavController) {
+        val movie = getMovies().find { it.id == movieId }
+
+    if(movie == null)
+    {
+        Text("Movie not found")
+        return
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -59,7 +64,6 @@ fun DetailScreen(movieId: String, navController: NavController) {
                         }
                     }
                 }
-
             }
         }
     )
