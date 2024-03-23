@@ -11,19 +11,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.example.movieappmad24.models.getMovies
+import com.example.movieappmad24.widgets.MovieCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(movieId: String, navController: NavController) {
-    val movie = getMovies().find { it.id == movieId }
+    val movie = getMovies().find { it.id == movieId } ?: return // if movie is NULL return
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             CenterAlignedTopAppBar(title = {
-                if (movie != null) {
-                    Text(movie.title)
-                } else Text("Detail page")
+                Text(movie.title)
             })
         },
 
@@ -32,7 +31,7 @@ fun DetailScreen(movieId: String, navController: NavController) {
                 modifier = Modifier
                     .padding(paddingValues)
             ) {
-                Text("abc")
+                MovieCard(movie = movie)
             }
         }
     )

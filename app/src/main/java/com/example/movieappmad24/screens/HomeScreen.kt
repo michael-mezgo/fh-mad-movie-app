@@ -52,6 +52,7 @@ import com.example.movieappmad24.models.Movie
 import com.example.movieappmad24.models.getMovies
 import com.example.movieappmad24.ui.theme.MovieAppMAD24Theme
 import com.example.movieappmad24.ui.theme.NavItem
+import com.example.movieappmad24.widgets.MovieCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -111,114 +112,7 @@ fun MovieList(movies: List<Movie> = getMovies(), padding: PaddingValues, navCont
         modifier = Modifier.padding(padding)
     ) {
         items(movies) { movie ->
-            MovieRow(movie) {movieId -> navController.navigate("detailscreen/$movieId")}
-        }
-    }
-}
-
-
-@Composable
-fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {}) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(5.dp)
-            .clickable { onItemClick(movie.id) },
-        shape = ShapeDefaults.Large,
-        elevation = CardDefaults.cardElevation(10.dp)
-    ) {
-        Column {
-            MovieCardPictureAndFavorite(movie = movie)
-
-            MovieCardTitleAndDetails(movie = movie)
-        }
-    }
-}
-
-@Composable
-fun MovieCardPictureAndFavorite(movie: Movie) {
-    Box(
-        modifier = Modifier
-            .height(150.dp)
-            .fillMaxWidth(),
-        contentAlignment = Alignment.Center
-    ) {
-        // https://coil-kt.github.io/coil/compose/
-        AsyncImage(
-            model = if(movie.images.isNotEmpty()) movie.images[0] else null,
-            contentScale = ContentScale.Crop,
-            placeholder = painterResource(id = R.drawable.movie_image),
-            contentDescription = "${movie.title} Image"
-        )
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(10.dp),
-            contentAlignment = Alignment.TopEnd
-        ) {
-            Icon(
-                tint = MaterialTheme.colorScheme.secondary,
-                imageVector = Icons.Default.FavoriteBorder,
-                contentDescription = "Add to favorites"
-            )
-        }
-    }
-}
-
-@Composable
-fun MovieCardTitleAndDetails(movie: Movie) {
-    var showDetails by remember {
-        mutableStateOf(false)
-    }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(6.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(text = movie.title, fontWeight = FontWeight.Bold)
-        Icon(
-            modifier = Modifier
-                .clickable {
-                    showDetails = !showDetails
-                },
-            imageVector =
-            if (showDetails) Icons.Filled.KeyboardArrowDown
-            else Icons.Default.KeyboardArrowUp, contentDescription = "show more"
-        )
-    }
-
-    AnimatedVisibility(visible = showDetails) {
-        MovieDetails(movie = movie)
-    }
-}
-
-@Composable
-fun MovieDetails(movie: Movie) {
-    Column(
-        modifier = Modifier
-            .padding(all = 15.dp)
-    ) {
-        Row {
-            Text(
-                """Director: ${movie.director}
-                |Released: ${movie.year}
-                |Genre: ${movie.genre}
-                |Actors: ${movie.actors}
-                |Rating: ${movie.rating}
-            """.trimMargin()
-            )
-        }
-        Row(
-            modifier = Modifier
-                .padding(vertical = 5.dp)
-        ) {
-            HorizontalDivider()
-        }
-        Row {
-            Text("Plot: ${movie.plot}")
+            MovieCard(movie) {movieId -> navController.navigate("detailscreen/$movieId")}
         }
     }
 }
