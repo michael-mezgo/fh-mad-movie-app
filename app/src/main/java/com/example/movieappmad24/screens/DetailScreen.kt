@@ -22,11 +22,12 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.movieappmad24.R
 import com.example.movieappmad24.models.getMovies
+import com.example.movieappmad24.viewmodels.MoviesViewModel
 import com.example.movieappmad24.widgets.CustomTopAppBar
 import com.example.movieappmad24.widgets.MovieCard
 
 @Composable
-fun DetailScreen(movieId: String?, navController: NavController) {
+fun DetailScreen(movieId: String?, navController: NavController, viewModel: MoviesViewModel) {
     val movie = getMovies().find { it.id == movieId }
 
     if (movie == null) {
@@ -47,7 +48,7 @@ fun DetailScreen(movieId: String?, navController: NavController) {
             ) {
                 Column {
                     Row {
-                        MovieCard(movie = movie)
+                        MovieCard(movie = movie, onFavoriteClick = {})
                     }
                     LazyRow(
                         Modifier

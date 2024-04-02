@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -28,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -37,7 +39,7 @@ import com.example.movieappmad24.R
 import com.example.movieappmad24.models.Movie
 
 @Composable
-fun MovieCard(movie: Movie, onItemClick: (String) -> Unit = {}) {
+fun MovieCard(movie: Movie, onFavoriteClick: () -> Unit, onItemClick: (String) -> Unit = {}) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -47,7 +49,7 @@ fun MovieCard(movie: Movie, onItemClick: (String) -> Unit = {}) {
         elevation = CardDefaults.cardElevation(10.dp)
     ) {
         Column {
-            MovieCardPictureAndFavorite(movie = movie)
+            MovieCardPictureAndFavorite(movie = movie, onFavoriteClick)
 
             MovieCardTitleAndDetails(movie = movie)
         }
@@ -55,7 +57,7 @@ fun MovieCard(movie: Movie, onItemClick: (String) -> Unit = {}) {
 }
 
 @Composable
-fun MovieCardPictureAndFavorite(movie: Movie) {
+fun MovieCardPictureAndFavorite(movie: Movie, onFavoriteClick: () -> Unit) {
     Box(
         modifier = Modifier
             .height(150.dp)
@@ -76,8 +78,14 @@ fun MovieCardPictureAndFavorite(movie: Movie) {
             contentAlignment = Alignment.TopEnd
         ) {
             Icon(
-                tint = MaterialTheme.colorScheme.secondary,
-                imageVector = Icons.Default.FavoriteBorder,
+                modifier = Modifier
+                    .clickable { onFavoriteClick() },
+                tint =
+                if(movie.isFavoriteMovie) Color.Red
+                else Color.Gray,
+                imageVector =
+                if(movie.isFavoriteMovie) Icons.Default.Favorite
+                else Icons.Default.FavoriteBorder,
                 contentDescription = "Add to favorites"
             )
         }

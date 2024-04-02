@@ -6,16 +6,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.example.movieappmad24.models.getMovies
+import com.example.movieappmad24.viewmodels.MoviesViewModel
 import com.example.movieappmad24.widgets.BottomNavigationBar
 import com.example.movieappmad24.widgets.SimpleTopAppBar
 
 @Composable
-fun WatchlistScreen(navController: NavController) {
+fun WatchlistScreen(navController: NavController, viewModel: MoviesViewModel) {
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
         SimpleTopAppBar(title = "Watchlist")
     }, bottomBar = {
         BottomNavigationBar(navController = navController)
     }, content = { padding ->
-        (MovieList(movies = getMovies().subList(1, 3), padding, navController))
+        (MovieList(viewModel, padding, navController))
     })
 }
