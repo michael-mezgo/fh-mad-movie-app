@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.movieappmad24.navigation.Screen
+import com.example.movieappmad24.navigation.Screens
 import com.example.movieappmad24.ui.theme.NavItem
 
 @Composable
@@ -20,12 +20,12 @@ fun BottomNavigationBar(navController: NavController) {
         NavItem(
             name = "Home",
             icon = Icons.Default.Home,
-            route = Screen.Home.route
+            route = Screens.Home.route
         ),
         NavItem(
             name = "Watchlist",
             icon = Icons.Default.Star,
-            route = Screen.Watchlist.route
+            route = Screens.Watchlist.route
         )
     )
     CreateNavigationBar(items = navigationItems, navController)

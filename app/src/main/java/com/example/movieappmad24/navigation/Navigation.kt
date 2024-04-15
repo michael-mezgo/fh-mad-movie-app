@@ -18,14 +18,14 @@ fun Navigation() {
 
     NavHost(
         navController = navController,
-        startDestination = Screen.Home.route
+        startDestination = Screens.Home.route
     ) {
 
-        composable(route = Screen.Home.route) {
+        composable(route = Screens.Home.route) {
             HomeScreen(navController, viewModel)
         }
 
-        composable(route = Screen.Detail.route)
+        composable(route = Screens.Detail.route)
         { backStackEntry ->
             DetailScreen(
                 movieId = backStackEntry.arguments?.getString(MOVIE_ID),
@@ -34,7 +34,7 @@ fun Navigation() {
             )
         }
 
-        composable(route = Screen.Watchlist.route) {
+        composable(route = Screens.Watchlist.route) {
             WatchlistScreen(navController, viewModel)
         }
     }

@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.example.movieappmad24.models.Movie
-import com.example.movieappmad24.navigation.Screen
+import com.example.movieappmad24.navigation.Screens
 import com.example.movieappmad24.viewmodels.MoviesViewModel
 
 @Composable
@@ -22,7 +22,7 @@ fun MovieList(
             MovieCard(movie, onFavoriteClick = {
                 moviesViewModel.toggleIsFavorite(movie)
             }) { movieId ->
-                val route = Screen.Detail.setMovieId(movieId)
+                val route = Screens.Detail.setMovieId(movieId)
                 navController.navigate(route = route)
             }
         }
