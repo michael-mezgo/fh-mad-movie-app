@@ -10,7 +10,6 @@ class MoviesViewModel : ViewModel() {
     val movieList: List<Movie> // expose previously created list but immutable
         get() = _movieList
 
-    val favoriteMovieList: List<Movie> = getMovies().toMutableStateList()
     fun toggleIsFavorite(movie: Movie) {
         movie.isFavoriteMovie = !movie.isFavoriteMovie
     }
