@@ -19,13 +19,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
@@ -46,24 +52,19 @@ fun DetailScreen(movieId: String?, navController: NavController, viewModel: Movi
         return
     }
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            CustomTopAppBar(title = movie.title, navController = navController)
-        },
+    Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
+        CustomTopAppBar(title = movie.title, navController = navController)
+    },
 
         content = { paddingValues ->
             Box(
-                modifier = Modifier
-                    .padding(paddingValues)
+                modifier = Modifier.padding(paddingValues)
             ) {
                 Column(
-                    modifier = Modifier
-                        .verticalScroll(rememberScrollState())
+                    modifier = Modifier.verticalScroll(rememberScrollState())
                 ) {
                     Row {
-                        MovieCard(
-                            movie = movie,
+                        MovieCard(movie = movie,
                             onFavoriteClick = { viewModel.toggleIsFavorite(movie) })
                     }
                     Row {
@@ -73,8 +74,7 @@ fun DetailScreen(movieId: String?, navController: NavController, viewModel: Movi
                         TrailerPlayer(movie = movie)
                     }
                     LazyRow(
-                        Modifier
-                            .height(300.dp)
+                        Modifier.height(300.dp)
                     ) {
                         this.items(items = movie.images) { image ->
                             MoviePicture(resourceLink = image, title = movie.title)
@@ -82,12 +82,19 @@ fun DetailScreen(movieId: String?, navController: NavController, viewModel: Movi
                     }
                 }
             }
-        }
-    )
+        })
 }
 
 @Composable
 fun TrailerPlayer(movie: Movie) {
+    var lifecycle by remember {
+        mutableStateOf(Lifecycle.Event.ON_CREATE)
+    }
+
+    var videoPaused by remember {
+        mutableStateOf(value = true)
+    }
+
     // Sources:
     // https://medium.com/@munbonecci/how-to-display-videos-using-exoplayer-on-android-with-jetpack-compose-1fb4d57778f4
     // https://developer.android.com/media/media3/exoplayer?hl=de
@@ -107,10 +114,18 @@ fun TrailerPlayer(movie: Movie) {
         trailerPlayer.prepare()
     }
 
-    // Manage lifecycle events
-    DisposableEffect(Unit) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    // Source: https://youtu.be/NpCSzl74ciY?si=SVsV_CB3B0pfKGKP (from Moodle Course)
+    DisposableEffect(key1 = lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            lifecycle = event
+        }
+        lifecycleOwner.lifecycle.addObserver(observer = observer)
+
         onDispose {
             trailerPlayer.release()
+            lifecycleOwner.lifecycle.removeObserver(observer = observer)
         }
     }
 
@@ -123,24 +138,40 @@ fun TrailerPlayer(movie: Movie) {
         },
         modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp) // Set your desired height
+            .aspectRatio(16f / 9f),
+        // Source: https://youtu.be/NpCSzl74ciY?si=SVsV_CB3B0pfKGKP (from Moodle Course)
+        update = {
+            when (lifecycle) {
+                Lifecycle.Event.ON_RESUME -> {
+                    it.onResume()
+                    if (!videoPaused) {
+                        trailerPlayer.play()
+                    }
+                }
+
+                Lifecycle.Event.ON_STOP -> {
+                    it.onPause()
+                    videoPaused = !trailerPlayer.isPlaying
+                    trailerPlayer.pause()
+                }
+
+                else -> Unit
+            }
+        },
     )
 }
 
 @Composable
 fun MoviePicture(resourceLink: String, title: String) {
     Card(
-        shape = RoundedCornerShape(size = 20.dp),
-        modifier = Modifier
-            .padding(all = 15.dp)
+        shape = RoundedCornerShape(size = 20.dp), modifier = Modifier.padding(all = 15.dp)
     ) {
         AsyncImage(
             model = resourceLink,
             contentScale = ContentScale.Crop,
             placeholder = painterResource(id = R.drawable.movie_image),
             contentDescription = "$title Image",
-            modifier = Modifier
-                .aspectRatio(ratio = 1f)
+            modifier = Modifier.aspectRatio(ratio = 1f)
         )
     }
 }
