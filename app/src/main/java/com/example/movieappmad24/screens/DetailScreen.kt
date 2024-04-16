@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -30,14 +32,14 @@ import androidx.media3.ui.PlayerView
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.movieappmad24.R
-import com.example.movieappmad24.models.getMovies
+import com.example.movieappmad24.models.Movie
 import com.example.movieappmad24.viewmodels.MoviesViewModel
 import com.example.movieappmad24.widgets.CustomTopAppBar
 import com.example.movieappmad24.widgets.MovieCard
 
 @Composable
 fun DetailScreen(movieId: String?, navController: NavController, viewModel: MoviesViewModel) {
-    val movie = getMovies().find { it.id == movieId }
+    val movie = viewModel.movieList.find { it.id == movieId }
 
     if (movie == null) {
         Text("Movie not found")
@@ -55,51 +57,20 @@ fun DetailScreen(movieId: String?, navController: NavController, viewModel: Movi
                 modifier = Modifier
                     .padding(paddingValues)
             ) {
-                Column {
+                Column(
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                ) {
                     Row {
-                        MovieCard(movie = movie, onFavoriteClick = {})
+                        MovieCard(
+                            movie = movie,
+                            onFavoriteClick = { viewModel.toggleIsFavorite(movie) })
                     }
                     Row {
                         Text("Movie trailer")
                     }
                     Row {
-                        // Sources:
-                        // https://medium.com/@munbonecci/how-to-display-videos-using-exoplayer-on-android-with-jetpack-compose-1fb4d57778f4
-                        // https://developer.android.com/media/media3/exoplayer?hl=de
-                        val context = LocalContext.current
-
-                        val movieTrailer = MediaItem.fromUri("android.resource://${context.packageName}/${movie.trailer}")
-                        val trailerPlayer = remember {
-                            ExoPlayer.Builder(context).build()
-                        }
-
-                        // Set MediaSource to ExoPlayer
-                        LaunchedEffect(movieTrailer) {
-// Set the media item to be played.
-                            trailerPlayer.setMediaItem(movieTrailer)
-// Prepare the player.
-                            trailerPlayer.prepare()
-                            trailerPlayer.play()
-                        }
-
-                        // Manage lifecycle events
-                        DisposableEffect(Unit) {
-                            onDispose {
-                                trailerPlayer.release()
-                            }
-                        }
-
-                        // Use AndroidView to embed an Android View (PlayerView) into Compose
-                        AndroidView(
-                            factory = { ctx ->
-                                PlayerView(ctx).apply {
-                                    player = trailerPlayer                                }
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(200.dp) // Set your desired height
-                        )
-
+                        TrailerPlayer(movie = movie)
                     }
                     LazyRow(
                         Modifier
@@ -115,6 +86,46 @@ fun DetailScreen(movieId: String?, navController: NavController, viewModel: Movi
     )
 }
 
+@Composable
+fun TrailerPlayer(movie: Movie) {
+    // Sources:
+    // https://medium.com/@munbonecci/how-to-display-videos-using-exoplayer-on-android-with-jetpack-compose-1fb4d57778f4
+    // https://developer.android.com/media/media3/exoplayer?hl=de
+    val context = LocalContext.current
+
+    val movieTrailer =
+        MediaItem.fromUri("android.resource://${context.packageName}/${movie.trailer}")
+    val trailerPlayer = remember {
+        ExoPlayer.Builder(context).build()
+    }
+
+    // Set MediaSource to ExoPlayer
+    LaunchedEffect(movieTrailer) {
+        // Set the media item to be played.
+        trailerPlayer.setMediaItem(movieTrailer)
+        // Prepare the player.
+        trailerPlayer.prepare()
+    }
+
+    // Manage lifecycle events
+    DisposableEffect(Unit) {
+        onDispose {
+            trailerPlayer.release()
+        }
+    }
+
+    // Use AndroidView to embed an Android View (PlayerView) into Compose
+    AndroidView(
+        factory = { ctx ->
+            PlayerView(ctx).apply {
+                player = trailerPlayer
+            }
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp) // Set your desired height
+    )
+}
 
 @Composable
 fun MoviePicture(resourceLink: String, title: String) {
