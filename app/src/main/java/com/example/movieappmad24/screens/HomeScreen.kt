@@ -3,6 +3,7 @@ package com.example.movieappmad24.screens
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
@@ -19,7 +20,7 @@ fun HomeScreen(navController: NavController, viewModel: MoviesViewModel) {
     }, bottomBar = {
         BottomNavigationBar(navController = navController)
     }, content = { padding ->
-        (MovieList(moviesViewModel = viewModel, viewModel.movieList, padding, navController))
+        (MovieList(moviesViewModel = viewModel, viewModel.movieList.collectAsState().value, padding, navController))
     })
 }
 

@@ -3,6 +3,7 @@ package com.example.movieappmad24.screens
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.example.movieappmad24.models.Movie
@@ -20,7 +21,7 @@ fun WatchlistScreen(navController: NavController, viewModel: MoviesViewModel) {
     }, content = { padding ->
         (MovieList(
             viewModel,
-            viewModel.movieList.filter { movie: Movie -> movie.isFavoriteMovie },
+            viewModel.movieList.collectAsState().value.filter { movie: Movie -> movie.isFavoriteMovie },
             padding,
             navController
         ))

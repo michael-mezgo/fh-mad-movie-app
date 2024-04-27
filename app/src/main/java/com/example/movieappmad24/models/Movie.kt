@@ -4,9 +4,10 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(tableName = "movies")
 data class Movie(
-    @PrimaryKey val dbId: Long = 0,
+    @PrimaryKey(autoGenerate = true)
+    val dbId: Long = 0,
     val id: String,
     val title: String,
     val year: String,
@@ -18,7 +19,10 @@ data class Movie(
     val trailer: String,
     val rating: String,
     var isFavoriteMovie: Boolean = false
-)
+) {
+    constructor(dbId: Long, id: String, title: String, year: String, genre: String, director: String, actors: String, plot: String, trailer: String, rating: String, isFavoriteMovie: Boolean)
+    :this(dbId = dbId, id = id, title = title, year = year, genre = genre, director = director, actors = actors, plot = plot, images = mutableListOf<String>(), trailer = trailer, rating = rating, isFavoriteMovie = isFavoriteMovie)
+}
 
 fun getMovies(): List<Movie> {
     return listOf(

@@ -19,9 +19,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -42,10 +44,13 @@ import com.example.movieappmad24.models.Movie
 import com.example.movieappmad24.viewmodels.MoviesViewModel
 import com.example.movieappmad24.widgets.CustomTopAppBar
 import com.example.movieappmad24.widgets.MovieCard
+import kotlinx.coroutines.launch
 
 @Composable
 fun DetailScreen(movieId: String?, navController: NavController, viewModel: MoviesViewModel) {
-    val movie = viewModel.movieList.find { it.id == movieId }
+    val movie = viewModel.movieList.collectAsState().value.find { it.id == movieId }
+
+    val coroutineScope = rememberCoroutineScope()
 
     if (movie == null) {
         Text("Movie not found")
@@ -65,7 +70,11 @@ fun DetailScreen(movieId: String?, navController: NavController, viewModel: Movi
                 ) {
                     Row {
                         MovieCard(movie = movie,
-                            onFavoriteClick = { viewModel.toggleIsFavorite(movie) })
+                            onFavoriteClick = {
+                                coroutineScope.launch {
+                                    viewModel.toggleIsFavorite(movie)
+                                }
+                            })
                     }
                     Row {
                         Text("Movie trailer")

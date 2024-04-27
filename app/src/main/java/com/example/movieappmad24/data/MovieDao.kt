@@ -1,27 +1,30 @@
 package com.example.movieappmad24.data
 
+import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.example.movieappmad24.models.Movie
+import kotlinx.coroutines.flow.Flow
 
+@Dao
 interface MovieDao {
     @Insert
-    fun insert(movie: Movie)
+    suspend fun insert(movie: Movie)
 
     @Update
-    fun update(movie: Movie)
+    suspend fun update(movie: Movie)
 
     @Delete
-    fun delete(movie: Movie)
+    suspend fun delete(movie: Movie)
 
-    @Query("SELECT * FROM movie WHERE movie.dbId = :id")
-    fun getById(id: Long) : Movie
+    @Query("SELECT * FROM movies WHERE movies.dbId = :id")
+    fun getById(id: Long) : Flow<Movie>
 
-    @Query("SELECT * FROM movie")
-    fun getAllMovies() : List<Movie>
+    @Query("SELECT * FROM movies")
+    fun getAllMovies() : Flow<List<Movie>> //suspend (func that runs for a long time)
 
-    @Query("SELECT * FROM movie WHERE isFavoriteMovie = 1")
-    fun getFavoriteMovies() : List<Movie>
+    @Query("SELECT * FROM movies WHERE isFavoriteMovie = 1")
+    fun getFavoriteMovies() : Flow<List<Movie>>
 }
