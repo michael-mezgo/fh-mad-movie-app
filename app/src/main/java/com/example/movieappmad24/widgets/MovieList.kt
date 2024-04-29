@@ -9,23 +9,24 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.example.movieappmad24.models.Movie
+import com.example.movieappmad24.models.MovieWithImages
 import com.example.movieappmad24.navigation.Screens
 import com.example.movieappmad24.viewmodels.MoviesViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun MovieList(
-    moviesViewModel: MoviesViewModel, movieList: List<Movie>, padding: PaddingValues, navController: NavController
+    movieList: List<MovieWithImages>, padding: PaddingValues, navController: NavController, toggleIsFavorite: (Movie) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
 
     LazyColumn(
         modifier = Modifier.padding(padding)
     ) {
-        items(movieList) { movie ->
-            MovieCard(movie, onFavoriteClick = {
+        items(movieList) { movieWithImages ->
+            MovieCard(movieWithImages.movie, onFavoriteClick = {
                 coroutineScope.launch {
-                    moviesViewModel.toggleIsFavorite(movie)
+                    toggleIsFavorite(movieWithImages.movie)
                 }
             }) { movieId ->
                 val route = Screens.Detail.setMovieId(movieId)

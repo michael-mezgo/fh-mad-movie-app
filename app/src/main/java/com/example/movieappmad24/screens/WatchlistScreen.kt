@@ -5,25 +5,39 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.movieappmad24.data.MovieDatabase
 import com.example.movieappmad24.models.Movie
+import com.example.movieappmad24.repositories.MovieRepository
 import com.example.movieappmad24.viewmodels.MoviesViewModel
+import com.example.movieappmad24.viewmodels.MoviesViewModelFactory
+import com.example.movieappmad24.viewmodels.WatchlistViewModel
 import com.example.movieappmad24.widgets.BottomNavigationBar
 import com.example.movieappmad24.widgets.MovieList
 import com.example.movieappmad24.widgets.SimpleTopAppBar
+import kotlinx.coroutines.flow.collect
 
 @Composable
-fun WatchlistScreen(navController: NavController, viewModel: MoviesViewModel) {
+fun WatchlistScreen(navController: NavController) {
+
+    val db : MovieDatabase = MovieDatabase.getDatabase(LocalContext.current)
+    val repository: MovieRepository = MovieRepository(movieDao = db.movieDao())
+    val factory: MoviesViewModelFactory = MoviesViewModelFactory(repository = repository)
+    val viewModel: WatchlistViewModel = viewModel(factory = factory)
+
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
         SimpleTopAppBar(title = "Watchlist")
     }, bottomBar = {
         BottomNavigationBar(navController = navController)
     }, content = { padding ->
         (MovieList(
-            viewModel,
-            viewModel.movieList.collectAsState().value.filter { movie: Movie -> movie.isFavoriteMovie },
+            viewModel.favoriteMovies.collectAsState().value,
             padding,
             navController
-        ))
+        ) {
+            viewModel.toggleFavorite(it)
+        })
     })
 }

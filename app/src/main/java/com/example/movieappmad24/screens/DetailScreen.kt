@@ -19,7 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,31 +33,41 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.movieappmad24.R
+import com.example.movieappmad24.data.MovieDatabase
 import com.example.movieappmad24.models.Movie
-import com.example.movieappmad24.viewmodels.MoviesViewModel
+import com.example.movieappmad24.repositories.MovieRepository
+import com.example.movieappmad24.viewmodels.DetailViewModel
+import com.example.movieappmad24.viewmodels.MoviesViewModelFactory
 import com.example.movieappmad24.widgets.CustomTopAppBar
 import com.example.movieappmad24.widgets.MovieCard
 import kotlinx.coroutines.launch
 
 @Composable
-fun DetailScreen(movieId: String?, navController: NavController, viewModel: MoviesViewModel) {
-    val movie = viewModel.movieList.collectAsState().value.find { it.id == movieId }
+fun DetailScreen(movieId: Long?, navController: NavController) {
+
+    val db : MovieDatabase = MovieDatabase.getDatabase(LocalContext.current)
+    val repository: MovieRepository = MovieRepository(movieDao = db.movieDao())
+    val factory: MoviesViewModelFactory = MoviesViewModelFactory(repository = repository)
+    val viewModel: DetailViewModel = viewModel(factory = factory)
+
+    val movieWithImages = viewModel.findMovieWithId(movieId)
 
     val coroutineScope = rememberCoroutineScope()
 
-    if (movie == null) {
+    if (movieWithImages == null) {
         Text("Movie not found")
         return
     }
 
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
-        CustomTopAppBar(title = movie.title, navController = navController)
+        CustomTopAppBar(title = movieWithImages.movie.title, navController = navController)
     },
 
         content = { paddingValues ->
@@ -69,10 +78,10 @@ fun DetailScreen(movieId: String?, navController: NavController, viewModel: Movi
                     modifier = Modifier.verticalScroll(rememberScrollState())
                 ) {
                     Row {
-                        MovieCard(movie = movie,
+                        MovieCard(movie = movieWithImages.movie,
                             onFavoriteClick = {
                                 coroutineScope.launch {
-                                    viewModel.toggleIsFavorite(movie)
+                                    viewModel.toggleIsFavorite(movieWithImages.movie)
                                 }
                             })
                     }
@@ -80,13 +89,13 @@ fun DetailScreen(movieId: String?, navController: NavController, viewModel: Movi
                         Text("Movie trailer")
                     }
                     Row {
-                        TrailerPlayer(movie = movie)
+                        TrailerPlayer(movie = movieWithImages.movie)
                     }
                     LazyRow(
                         Modifier.height(300.dp)
                     ) {
-                        this.items(items = movie.images) { image ->
-                            MoviePicture(resourceLink = image, title = movie.title)
+                        this.items(items = movieWithImages.movieImages) { image ->
+                            MoviePicture(resourceLink = image.url, title = movieWithImages.movie.title)
                         }
                     }
                 }

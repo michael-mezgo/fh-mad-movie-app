@@ -2,7 +2,9 @@ package com.example.movieappmad24.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.room.Transaction
 import com.example.movieappmad24.models.Movie
+import com.example.movieappmad24.models.MovieWithImages
 import com.example.movieappmad24.models.getMovies
 import com.example.movieappmad24.repositories.MovieRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,7 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class MoviesViewModel(private val repository: MovieRepository) : ViewModel() {
-    private val _movieList = MutableStateFlow(listOf<Movie>())
+    private val _movieList = MutableStateFlow(listOf<MovieWithImages>())
 
     init {
         viewModelScope.launch {
@@ -27,7 +29,7 @@ class MoviesViewModel(private val repository: MovieRepository) : ViewModel() {
         }
     }
 
-    val movieList: StateFlow<List<Movie>> = _movieList.asStateFlow()
+    val movieList: StateFlow<List<MovieWithImages>> = _movieList.asStateFlow()
 
     fun toggleIsFavorite(movie: Movie) {
 

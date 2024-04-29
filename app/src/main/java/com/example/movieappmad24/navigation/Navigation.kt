@@ -18,31 +18,25 @@ import com.example.movieappmad24.viewmodels.MoviesViewModelFactory
 fun Navigation() {
     val navController = rememberNavController()
 
-    val db : MovieDatabase = MovieDatabase.getDatabase(LocalContext.current)
-    val repository: MovieRepository = MovieRepository(movieDao = db.movieDao())
-    val factory: MoviesViewModelFactory = MoviesViewModelFactory(repository = repository)
-    val viewModel: MoviesViewModel = viewModel(factory = factory)
-
     NavHost(
         navController = navController,
         startDestination = Screens.Home.route
     ) {
 
         composable(route = Screens.Home.route) {
-            HomeScreen(navController, viewModel)
+            HomeScreen(navController)
         }
 
         composable(route = Screens.Detail.route)
         { backStackEntry ->
             DetailScreen(
-                movieId = backStackEntry.arguments?.getString(MOVIE_ID),
-                navController = navController,
-                viewModel = viewModel
+                movieId = backStackEntry.arguments?.getString(MOVIE_ID)?.toLong(),
+                navController = navController
             )
         }
 
         composable(route = Screens.Watchlist.route) {
-            WatchlistScreen(navController, viewModel)
+            WatchlistScreen(navController)
         }
     }
 }

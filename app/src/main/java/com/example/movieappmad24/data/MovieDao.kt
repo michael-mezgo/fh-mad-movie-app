@@ -4,8 +4,10 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.example.movieappmad24.models.Movie
+import com.example.movieappmad24.models.MovieWithImages
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -19,12 +21,15 @@ interface MovieDao {
     @Delete
     suspend fun delete(movie: Movie)
 
+    @Transaction
     @Query("SELECT * FROM movies WHERE movies.dbId = :id")
-    fun getById(id: Long) : Flow<Movie>
+    suspend fun getById(id: Long?) : MovieWithImages
 
+    @Transaction
     @Query("SELECT * FROM movies")
-    fun getAllMovies() : Flow<List<Movie>> //suspend (func that runs for a long time)
+    fun getAllMovies() : Flow<List<MovieWithImages>> //suspend (func that runs for a long time)
 
+    @Transaction
     @Query("SELECT * FROM movies WHERE isFavoriteMovie = 1")
-    fun getFavoriteMovies() : Flow<List<Movie>>
+    fun getFavoriteMovies() : Flow<List<MovieWithImages>>
 }
