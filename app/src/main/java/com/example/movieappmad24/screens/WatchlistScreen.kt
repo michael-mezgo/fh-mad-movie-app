@@ -3,14 +3,13 @@ package com.example.movieappmad24.screens
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.movieappmad24.data.MovieDatabase
 import com.example.movieappmad24.repositories.MovieRepository
-import com.example.movieappmad24.viewmodels.MoviesViewModelFactory
+import com.example.movieappmad24.viewmodels.ViewModelFactory
 import com.example.movieappmad24.viewmodels.WatchlistViewModel
 import com.example.movieappmad24.widgets.BottomNavigationBar
 import com.example.movieappmad24.widgets.MovieList
@@ -21,7 +20,7 @@ fun WatchlistScreen(navController: NavController) {
 
     val db : MovieDatabase = MovieDatabase.getDatabase(LocalContext.current)
     val repository: MovieRepository = MovieRepository(movieDao = db.movieDao())
-    val factory: MoviesViewModelFactory = MoviesViewModelFactory(repository = repository)
+    val factory: ViewModelFactory = ViewModelFactory(repository = repository)
     val viewModel: WatchlistViewModel = viewModel(factory = factory)
 
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
@@ -30,11 +29,10 @@ fun WatchlistScreen(navController: NavController) {
         BottomNavigationBar(navController = navController)
     }, content = { padding ->
         (MovieList(
-            viewModel.favoriteMovies.collectAsState().value,
+            viewModel.favoriteMovies,
             padding,
-            navController
-        ) {
-            viewModel.toggleFavorite(it)
-        })
+            navController,
+            viewModel
+        ))
     })
 }

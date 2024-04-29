@@ -4,8 +4,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.movieappmad24.models.Movie
 import com.example.movieappmad24.models.MovieImage
+import com.example.movieappmad24.models.getMovies
 
 @Database (
     entities = [Movie::class, MovieImage::class],
@@ -25,6 +27,18 @@ abstract class MovieDatabase : RoomDatabase() {
                     .fallbackToDestructiveMigration() //not good for production Database, delete Data at migration
                     .build()
                     .also { Instance = it } //write into instance variable
+            }
+        }
+
+        private fun seedDatabase(context: Context):Callback {
+            return object : Callback() {
+                override fun onCreate(db: SupportSQLiteDatabase) {
+                    super.onCreate(db)
+
+                    getMovies().forEach{ movie: Movie ->
+
+                    }
+                }
             }
         }
     }
