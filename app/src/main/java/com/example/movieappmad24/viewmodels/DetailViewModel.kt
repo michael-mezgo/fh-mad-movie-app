@@ -1,10 +1,7 @@
 package com.example.movieappmad24.viewmodels
 
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.movieappmad24.data.MovieDatabase
 import com.example.movieappmad24.models.Movie
 import com.example.movieappmad24.models.MovieWithImages
 import com.example.movieappmad24.repositories.MovieRepository

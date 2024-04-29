@@ -9,15 +9,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.movieappmad24.data.MovieDatabase
-import com.example.movieappmad24.models.Movie
 import com.example.movieappmad24.repositories.MovieRepository
-import com.example.movieappmad24.viewmodels.MoviesViewModel
 import com.example.movieappmad24.viewmodels.MoviesViewModelFactory
 import com.example.movieappmad24.viewmodels.WatchlistViewModel
 import com.example.movieappmad24.widgets.BottomNavigationBar
 import com.example.movieappmad24.widgets.MovieList
 import com.example.movieappmad24.widgets.SimpleTopAppBar
-import kotlinx.coroutines.flow.collect
 
 @Composable
 fun WatchlistScreen(navController: NavController) {

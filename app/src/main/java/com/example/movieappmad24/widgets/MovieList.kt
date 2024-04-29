@@ -11,7 +11,6 @@ import androidx.navigation.NavController
 import com.example.movieappmad24.models.Movie
 import com.example.movieappmad24.models.MovieWithImages
 import com.example.movieappmad24.navigation.Screens
-import com.example.movieappmad24.viewmodels.MoviesViewModel
 import kotlinx.coroutines.launch
 
 @Composable
