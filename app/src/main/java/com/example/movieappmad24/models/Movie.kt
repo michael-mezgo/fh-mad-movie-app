@@ -22,6 +22,10 @@ data class Movie(
 ) {
     constructor(dbId: Long, id: String, title: String, year: String, genre: String, director: String, actors: String, plot: String, trailer: String, rating: String, isFavoriteMovie: Boolean)
     :this(dbId = dbId, id = id, title = title, year = year, genre = genre, director = director, actors = actors, plot = plot, images = mutableListOf<String>(), trailer = trailer, rating = rating, isFavoriteMovie = isFavoriteMovie)
+
+    override fun equals(other: Any?): Boolean {
+        return super.equals(other)
+    }
 }
 
 fun getMovies(): List<Movie> {
