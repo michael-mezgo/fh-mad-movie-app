@@ -19,7 +19,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,12 +38,12 @@ import com.example.movieappmad24.R
 import com.example.movieappmad24.models.Movie
 
 @Composable
-fun MovieCard(movie: Movie, onFavoriteClick: () -> Unit, onItemClick: (String) -> Unit = {}) {
+fun MovieCard(movie: Movie, onFavoriteClick: () -> Unit, onItemClick: (Long) -> Unit = {}) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(5.dp)
-            .clickable { onItemClick(movie.id) },
+            .clickable { onItemClick(movie.dbId) },
         shape = ShapeDefaults.Large,
         elevation = CardDefaults.cardElevation(10.dp)
     ) {

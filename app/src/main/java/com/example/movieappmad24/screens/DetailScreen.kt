@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -57,7 +58,7 @@ fun DetailScreen(movieId: Long?, navController: NavController) {
     val factory: MoviesViewModelFactory = MoviesViewModelFactory(repository = repository)
     val viewModel: DetailViewModel = viewModel(factory = factory)
 
-    val movieWithImages = viewModel.findMovieWithId(movieId)
+    val movieWithImages = viewModel.findMovieWithId(movieId).collectAsState().value
 
     val coroutineScope = rememberCoroutineScope()
 

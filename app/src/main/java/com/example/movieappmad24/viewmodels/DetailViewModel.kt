@@ -5,16 +5,21 @@ import androidx.lifecycle.viewModelScope
 import com.example.movieappmad24.models.Movie
 import com.example.movieappmad24.models.MovieWithImages
 import com.example.movieappmad24.repositories.MovieRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class DetailViewModel(private val repository: MovieRepository) : ViewModel() {
 
-    fun findMovieWithId(id: Long?): MovieWithImages? {
-        var movieWithImages: MovieWithImages? = null
+    private var _movie = MutableStateFlow<MovieWithImages?>(null)
+    fun findMovieWithId(id: Long?): StateFlow<MovieWithImages?> {
         viewModelScope.launch {
-            movieWithImages = repository.getMovieById(id)
+            repository.getMovieById(id).collect {
+                _movie.value = it
+            }
         }
-        return movieWithImages
+        return _movie.asStateFlow()
     }
 
     fun toggleIsFavorite(movie: Movie) {

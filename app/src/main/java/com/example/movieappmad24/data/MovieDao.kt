@@ -23,7 +23,7 @@ interface MovieDao {
 
     @Transaction
     @Query("SELECT * FROM movies WHERE movies.dbId = :id")
-    suspend fun getById(id: Long?) : MovieWithImages
+    fun getById(id: Long?) : Flow<MovieWithImages?>
 
     @Transaction
     @Query("SELECT * FROM movies")
