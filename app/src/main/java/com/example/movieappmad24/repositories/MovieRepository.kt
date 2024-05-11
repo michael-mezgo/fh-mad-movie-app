@@ -12,7 +12,7 @@ class MovieRepository (private val movieDao: MovieDao) { //Principle of dependen
 
     suspend fun delete(movie: Movie) = movieDao.delete(movie)
 
-    suspend fun getMovieById(id: Long?) = movieDao.getById(id)
+    fun getMovieById(id: Long?) = movieDao.getById(id)
 
     fun getAllMovies() = movieDao.getAllMovies()
 

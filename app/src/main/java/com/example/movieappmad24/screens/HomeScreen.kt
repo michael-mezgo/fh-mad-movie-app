@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,13 +25,14 @@ fun HomeScreen(navController: NavController) {
     val repository: MovieRepository = MovieRepository(movieDao = db.movieDao())
     val factory: MoviesViewModelFactory = MoviesViewModelFactory(repository = repository)
     val viewModel: MoviesViewModel = viewModel(factory = factory)
+    val movies by viewModel.movieList.collectAsState()
 
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
         SimpleTopAppBar(title = "Movie App")
     }, bottomBar = {
         BottomNavigationBar(navController = navController)
     }, content = { padding ->
-        (MovieList(viewModel.movieList.collectAsState().value, padding, navController) {
+        (MovieList(movies, padding, navController) {
             viewModel.toggleIsFavorite(it)
         })
     })

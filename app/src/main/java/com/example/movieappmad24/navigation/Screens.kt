@@ -5,8 +5,8 @@ const val MOVIE_ID = "MOVIE"
 sealed class Screens(var route: String) {
     data object Home : Screens(route = "homescreen")
     object Detail : Screens(route = "detailscreen/{${MOVIE_ID}}") {
-        fun setMovieId(movieId: String): String {
-            return this.route.replace(oldValue = "{$MOVIE_ID}", newValue = movieId)
+        fun setMovieId(movieId: Long): String {
+            return this.route.replace(oldValue = "{$MOVIE_ID}", newValue = movieId.toString())
         }
     }
 
