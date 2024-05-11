@@ -4,12 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.movieappmad24.repositories.MovieRepository
 
-class ViewModelFactory(private val repository: MovieRepository) : ViewModelProvider.Factory {
+class MoviesViewModelFactory(private val repository: MovieRepository) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if(modelClass.isAssignableFrom(HomeScreenViewModel::class.java))
+        if(modelClass.isAssignableFrom(MoviesViewModel::class.java))
         {
-            return HomeScreenViewModel(repository = repository) as T
+            return MoviesViewModel(repository = repository) as T
         }
         if(modelClass.isAssignableFrom(DetailViewModel::class.java))
         {

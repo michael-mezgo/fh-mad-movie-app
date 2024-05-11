@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class HomeScreenViewModel(private val repository: MovieRepository) : ViewModel(), MovieViewModel {
+class MoviesViewModel(private val repository: MovieRepository) : ViewModel() {
     private val _movieList = MutableStateFlow(listOf<MovieWithImages>())
 
     init {
@@ -30,7 +30,7 @@ class HomeScreenViewModel(private val repository: MovieRepository) : ViewModel()
 
     val movieList: StateFlow<List<MovieWithImages>> = _movieList.asStateFlow()
 
-    override fun toggleIsFavorite(movie: Movie) {
+    fun toggleIsFavorite(movie: Movie) {
 
         movie.isFavoriteMovie = !movie.isFavoriteMovie
 

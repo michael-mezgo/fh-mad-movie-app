@@ -27,7 +27,7 @@ interface MovieDao {
 
     @Transaction
     @Query("SELECT * FROM movies")
-    fun getAllMovies() : Flow<List<MovieWithImages>>
+    fun getAllMovies() : Flow<List<MovieWithImages>> //suspend (func that runs for a long time)
 
     @Transaction
     @Query("SELECT * FROM movies WHERE isFavoriteMovie = 1")

@@ -7,7 +7,7 @@ import com.example.movieappmad24.models.MovieWithImages
 import com.example.movieappmad24.repositories.MovieRepository
 import kotlinx.coroutines.launch
 
-class DetailViewModel(private val repository: MovieRepository) : ViewModel(), MovieViewModel {
+class DetailViewModel(private val repository: MovieRepository) : ViewModel() {
 
     fun findMovieWithId(id: Long?): MovieWithImages? {
         var movieWithImages: MovieWithImages? = null
@@ -17,7 +17,8 @@ class DetailViewModel(private val repository: MovieRepository) : ViewModel(), Mo
         return movieWithImages
     }
 
-    override fun toggleIsFavorite(movie: Movie) {
+    fun toggleIsFavorite(movie: Movie) {
+
         movie.isFavoriteMovie = !movie.isFavoriteMovie
 
         viewModelScope.launch {

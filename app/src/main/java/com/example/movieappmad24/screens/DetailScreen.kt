@@ -44,7 +44,7 @@ import com.example.movieappmad24.data.MovieDatabase
 import com.example.movieappmad24.models.Movie
 import com.example.movieappmad24.repositories.MovieRepository
 import com.example.movieappmad24.viewmodels.DetailViewModel
-import com.example.movieappmad24.viewmodels.ViewModelFactory
+import com.example.movieappmad24.viewmodels.MoviesViewModelFactory
 import com.example.movieappmad24.widgets.CustomTopAppBar
 import com.example.movieappmad24.widgets.MovieCard
 import kotlinx.coroutines.launch
@@ -54,7 +54,7 @@ fun DetailScreen(movieId: Long?, navController: NavController) {
 
     val db : MovieDatabase = MovieDatabase.getDatabase(LocalContext.current)
     val repository: MovieRepository = MovieRepository(movieDao = db.movieDao())
-    val factory: ViewModelFactory = ViewModelFactory(repository = repository)
+    val factory: MoviesViewModelFactory = MoviesViewModelFactory(repository = repository)
     val viewModel: DetailViewModel = viewModel(factory = factory)
 
     val movieWithImages = viewModel.findMovieWithId(movieId)
