@@ -36,27 +36,28 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.movieappmad24.R
 import com.example.movieappmad24.models.Movie
+import com.example.movieappmad24.models.MovieWithImages
 
 @Composable
-fun MovieCard(movie: Movie, onFavoriteClick: () -> Unit, onItemClick: (Long) -> Unit = {}) {
+fun MovieCard(movieWithImages: MovieWithImages, onFavoriteClick: () -> Unit, onItemClick: (Long) -> Unit = {}) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(5.dp)
-            .clickable { onItemClick(movie.dbId) },
+            .clickable { onItemClick(movieWithImages.movie.dbId) },
         shape = ShapeDefaults.Large,
         elevation = CardDefaults.cardElevation(10.dp)
     ) {
         Column {
-            MovieCardPictureAndFavorite(movie = movie, onFavoriteClick)
+            MovieCardPictureAndFavorite(movieWithImages = movieWithImages, onFavoriteClick)
 
-            MovieCardTitleAndDetails(movie = movie)
+            MovieCardTitleAndDetails(movie = movieWithImages.movie)
         }
     }
 }
 
 @Composable
-fun MovieCardPictureAndFavorite(movie: Movie, onFavoriteClick: () -> Unit) {
+fun MovieCardPictureAndFavorite(movieWithImages: MovieWithImages, onFavoriteClick: () -> Unit) {
     Box(
         modifier = Modifier
             .height(150.dp)
@@ -65,10 +66,10 @@ fun MovieCardPictureAndFavorite(movie: Movie, onFavoriteClick: () -> Unit) {
     ) {
         // https://coil-kt.github.io/coil/compose/
         AsyncImage(
-            model = if(movie.images.isNotEmpty()) movie.images[0] else null,
+            model = if(movieWithImages.movieImages.isNotEmpty()) movieWithImages.movieImages[0].url else null,
             contentScale = ContentScale.Crop,
             placeholder = painterResource(id = R.drawable.movie_image),
-            contentDescription = "${movie.title} Image"
+            contentDescription = "${movieWithImages.movie.title} Image"
         )
         Box(
             modifier = Modifier
@@ -80,10 +81,10 @@ fun MovieCardPictureAndFavorite(movie: Movie, onFavoriteClick: () -> Unit) {
                 modifier = Modifier
                     .clickable { onFavoriteClick() },
                 tint =
-                if(movie.isFavoriteMovie) Color.Red
+                if(movieWithImages.movie.isFavoriteMovie) Color.Red
                 else Color.Gray,
                 imageVector =
-                if(movie.isFavoriteMovie) Icons.Default.Favorite
+                if(movieWithImages.movie.isFavoriteMovie) Icons.Default.Favorite
                 else Icons.Default.FavoriteBorder,
                 contentDescription = "Add to favorites"
             )

@@ -23,7 +23,7 @@ fun MovieList(
         modifier = Modifier.padding(padding)
     ) {
         items(movieList) { movieWithImages ->
-            MovieCard(movieWithImages.movie, onFavoriteClick = {
+            MovieCard(movieWithImages, onFavoriteClick = {
                 coroutineScope.launch {
                     toggleIsFavorite(movieWithImages.movie)
                 }

@@ -3,6 +3,7 @@ package com.example.movieappmad24.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movieappmad24.models.Movie
+import com.example.movieappmad24.models.MovieImage
 import com.example.movieappmad24.models.MovieWithImages
 import com.example.movieappmad24.models.getMovies
 import com.example.movieappmad24.repositories.MovieRepository
@@ -15,9 +16,16 @@ class MoviesViewModel(private val repository: MovieRepository) : ViewModel() {
     private val _movieList = MutableStateFlow(listOf<MovieWithImages>())
 
     init {
+
+        val movies = getMovies()
         viewModelScope.launch {
-            getMovies().forEach { movie: Movie ->
+            var i = 0
+            movies.forEach { movie: Movie ->
                 repository.add(movie)
+                movie.images.forEach { image ->
+                    repository.addMovieImage(movieImage = MovieImage(movieId = i.toLong(), url = image))
+                }
+                i++
             }
         }
 

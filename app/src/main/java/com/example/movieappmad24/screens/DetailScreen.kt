@@ -79,7 +79,7 @@ fun DetailScreen(movieId: Long?, navController: NavController) {
                     modifier = Modifier.verticalScroll(rememberScrollState())
                 ) {
                     Row {
-                        MovieCard(movie = movieWithImages.movie,
+                        MovieCard(movieWithImages = movieWithImages,
                             onFavoriteClick = {
                                 coroutineScope.launch {
                                     viewModel.toggleIsFavorite(movieWithImages.movie)
