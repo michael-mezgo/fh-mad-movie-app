@@ -22,4 +22,6 @@ class MovieRepository (private val movieDao: MovieDao) { //Principle of dependen
     fun getFavoriteMovies() = movieDao.getFavoriteMovies()
 
     fun getAllMovieIds() = movieDao.getAllMovieIds()
+
+    suspend fun countMovies() = movieDao.countMovies()
 }

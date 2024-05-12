@@ -16,24 +16,35 @@ class MoviesViewModel(private val repository: MovieRepository) : ViewModel() {
     private val _movieList = MutableStateFlow(listOf<MovieWithImages>())
 
     init {
-
         val movies = getMovies()
         viewModelScope.launch {
-            var i = 0
-            movies.forEach { movie: Movie ->
-                repository.add(movie)
-                movie.images.forEach { image ->
-                    repository.addMovieImage(movieImage = MovieImage(movieId = i.toLong(), url = image))
-                }
-                i++
-            }
-        }
 
-        viewModelScope.launch {//coroutine scope - or name function suspend (func that runs for a long time)
+            if (repository.countMovies() == 0) {
+                var i = 1
+                movies.forEach { movie: Movie ->
+                    repository.add(movie)
+                    movie.images.forEach { image ->
+                        repository.addMovieImage(
+                            movieImage = MovieImage(
+                                movieId = i.toLong(),
+                                url = image
+                            )
+                        )
+                    }
+                    i++
+                }
+            }
+
             repository.getAllMovies().collect { movies ->
                 _movieList.value = movies
             }
         }
+
+        //viewModelScope.launch {//coroutine scope - or name function suspend (func that runs for a long time)
+        //    repository.getAllMovies().collect { movies ->
+        //        _movieList.value = movies
+        //    }
+        //}
     }
 
     val movieList: StateFlow<List<MovieWithImages>> = _movieList.asStateFlow()

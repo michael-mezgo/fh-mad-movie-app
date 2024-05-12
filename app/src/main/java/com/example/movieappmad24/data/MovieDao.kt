@@ -40,4 +40,7 @@ interface MovieDao {
     @Transaction
     @Query("SELECT dbId FROM movies")
     fun getAllMovieIds() : List<Long>
+
+    @Query("SELECT COUNT(*) FROM movies")
+    suspend fun countMovies() : Int
 }
